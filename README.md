@@ -1,4 +1,5 @@
 # rp2040-hdmi-1080p-hardware
+![full_function_board_top_traces](https://user-images.githubusercontent.com/60884082/226673590-79abb072-9154-490a-b677-34bb00a4cf34.png)
 
 Microcontrollers have begun to rival early PCs and retro gaming consoles in measures like speed and memory capacity, and even leapfrog them with new capabilities like multiple cores and wireless connectivity.  One area that still seems a bit lacking is video output.  Sure, the ability to connect a smallish LCD via i2c or SPI is normal, but can these little marvels do more?  With a little spicier circuit, I think so...
 
@@ -11,6 +12,10 @@ When considering different RAM module options: static RAM (SRAM) would have the 
 So, finding desktop resolution video output theoretically possible, I put together an RP2040 'desktop' board, complete with ethernet, USB-C in with 'real' (negotiated) power (not the USB A-to-C requirement or resistor hacks), a blingy gold sink board HDMI output with video and sound, i2s audio also piped to an onboard speaker, as well as a microphone input, two USB A for mouse and keyboard, a headphone jack, and hardware cutoff switches for mic and speaker, as well as compatibility and quality of life options.  Perhaps a good dev kit if you want to build on FreeRTOS, Zephyr, etc. -- by the way I love the maniac that made PyDOS for the RP2040 [ https://www.youtube.com/watch?v=Az_oiq8GE4Y ] and you should definitely watch his videos.
 
 However, the board is pricy at $40 per unit via JLCPCB.  I scaled that back to just the 'proof of concept' stuff -- a cheaper USB-C setup (with the USB A-to-C requirement), no sink board connectors, no speaker or mic, no configuration switches.  This cut the build cost about in half.
+
+![reduced_board_top_traces](https://user-images.githubusercontent.com/60884082/226673805-ff333a96-dbf9-43f4-b94d-1444af5d6dec.png)
+
+![reduced_board_bottom_traces](https://user-images.githubusercontent.com/60884082/226673872-b7fde2b1-849e-4de0-8a07-6b1d4b57f7d3.png)
 
 If you had the hardware in hand, what would RAM addressing look like?  With multiple RAM ic's, supposing your frame buffer has pages of 512 bits [ see Micron's explanation of page size here https://www.micron.com/-/media/client/global/documents/products/data-sheet/dram/ddr4/4gb_ddr4_dram_2e0d.pdf -- basically page size = 2 * # of column address bits x # of DQ bits/8] that means with 49,766,400 bits per frame / (512 bits per page * 3 parallel 8-bit colors) =  32,400 pages to address / 2 ranks (i.e. you are swapping between two banks of either 2x16-bit or 3x8-bit SRAM; perhaps not ideal, becuase using CS to deselect ranks means a chip will not listen for writes while it is not being read -- it gets complicated when there are multiple ic's trying to talk on the same line) = 16,200 row addresses needed [if all in one bank, so you could just tie your bank select pins high or low], therefore address space bits needed: 2^14 = 16,384, so 14 bits are needed (advancing +1 every ~512 clock ticks).  Double-checking: 16,200 addresses * 512 bits * 3 parallel colors in high/low bits or independent 8-bit chips * 2 ranks = 49,766,400 bits (the math works out).  Check your datasheet for your bank, row, and column arrangement.
 
