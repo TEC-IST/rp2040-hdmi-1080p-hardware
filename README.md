@@ -1,4 +1,7 @@
 # rp2040-hdmi-1080p-hardware
+
+Watch the video: https://youtu.be/-J4BTNmoRLg
+
 ![full_function_board_top_traces](https://user-images.githubusercontent.com/60884082/226673590-79abb072-9154-490a-b677-34bb00a4cf34.png)
 
 Microcontrollers have begun to rival early PCs and retro gaming consoles in measures like speed and memory capacity, and even leapfrog them with new capabilities like multiple cores and wireless connectivity.  One area that still seems a bit lacking is video output.  Sure, the ability to connect a smallish LCD via i2c or SPI is normal, but can these little marvels do more?  With a little spicier circuit, I think so...
